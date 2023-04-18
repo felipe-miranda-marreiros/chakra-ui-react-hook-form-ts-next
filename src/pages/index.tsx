@@ -1,11 +1,102 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import { Heading, Button, Center, Select } from '@chakra-ui/react'
+import { useController, useForm, UseControllerProps, FieldValues } from 'react-hook-form'
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  InputProps
+} from '@chakra-ui/react'
 
-const inter = Inter({ subsets: ['latin'] })
+interface FieldProps extends InputProps {
+  label?: string
+  type?: string
+  options: Array<string | number>
+}
+
+export const InputField = <T extends FieldValues>(
+  props: UseControllerProps<T> & Partial<FieldProps>
+) => {
+  const {
+    field,
+    fieldState: { invalid, isTouched, error }
+  } = useController(props)
+
+  return (
+    <FormControl isInvalid={invalid && isTouched}>
+      <FormLabel>{props.label}</FormLabel>
+      <Input {...field} />
+      <FormErrorMessage>{error?.message}</FormErrorMessage>
+    </FormControl>
+  )
+}
+
+export const SelectField = <T extends FieldValues>(
+  props: UseControllerProps<T> & FieldProps
+) => {
+  const {
+    field,
+    fieldState: { invalid, isTouched, error }
+  } = useController(props)
+
+  return (
+    <FormControl isInvalid={invalid && isTouched}>
+      <FormLabel>{props.label}</FormLabel>
+      <Select {...field}>
+        {props.options.map((option) => {
+          return (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          )
+        })}
+      </Select>
+      <FormErrorMessage>{error?.message}</FormErrorMessage>
+    </FormControl>
+  )
+}
+
+const ufBrasil = [
+  'AC',
+  'AL',
+  'AP',
+  'AM',
+  'BA',
+  'CE',
+  'DF',
+  'ES',
+  'GO',
+  'MA',
+  'MT',
+  'MS',
+  'MG',
+  'PA',
+  'PB',
+  'PR',
+  'PE',
+  'PI',
+  'RJ',
+  'RN',
+  'RS',
+  'RO',
+  'RR',
+  'SC',
+  'SP',
+  'SE',
+  'TO'
+]
 
 export default function Home() {
+  const { handleSubmit, control } = useForm({
+    defaultValues: {
+      firstName: '',
+      state: ''
+    },
+    mode: 'onChange'
+  })
+  const onSubmit = (data) => console.log(data)
+
   return (
     <>
       <Head>
@@ -14,100 +105,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
-        </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
+      <main>
+        <Center as="form" onSubmit={handleSubmit(onSubmit)}>
+          <Heading>Hello</Heading>
+          <Button type="submit">Click</Button>
+          <InputField control={control} name="firstName" label="Nome" />
+          <SelectField control={control} options={ufBrasil} name="state" label="Estado" />
+        </Center>
       </main>
     </>
   )
