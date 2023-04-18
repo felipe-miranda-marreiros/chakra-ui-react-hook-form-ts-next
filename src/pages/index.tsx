@@ -1,101 +1,21 @@
 import Head from 'next/head'
-import { Heading, Button, Center, Select } from '@chakra-ui/react'
 import { useController, useForm, UseControllerProps, FieldValues } from 'react-hook-form'
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  InputProps
-} from '@chakra-ui/react'
+import { Total, FieldArray } from './components/FieldArray'
 
-interface FieldProps extends InputProps {
-  label?: string
-  type?: string
-  options: Array<string | number>
+type DefaultValues = {
+  firstName: string
+  state: string
 }
-
-export const InputField = <T extends FieldValues>(
-  props: UseControllerProps<T> & Partial<FieldProps>
-) => {
-  const {
-    field,
-    fieldState: { invalid, isTouched, error }
-  } = useController(props)
-
-  return (
-    <FormControl isInvalid={invalid && isTouched}>
-      <FormLabel>{props.label}</FormLabel>
-      <Input {...field} />
-      <FormErrorMessage>{error?.message}</FormErrorMessage>
-    </FormControl>
-  )
-}
-
-export const SelectField = <T extends FieldValues>(
-  props: UseControllerProps<T> & FieldProps
-) => {
-  const {
-    field,
-    fieldState: { invalid, isTouched, error }
-  } = useController(props)
-
-  return (
-    <FormControl isInvalid={invalid && isTouched}>
-      <FormLabel>{props.label}</FormLabel>
-      <Select {...field}>
-        {props.options.map((option) => {
-          return (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          )
-        })}
-      </Select>
-      <FormErrorMessage>{error?.message}</FormErrorMessage>
-    </FormControl>
-  )
-}
-
-const ufBrasil = [
-  'AC',
-  'AL',
-  'AP',
-  'AM',
-  'BA',
-  'CE',
-  'DF',
-  'ES',
-  'GO',
-  'MA',
-  'MT',
-  'MS',
-  'MG',
-  'PA',
-  'PB',
-  'PR',
-  'PE',
-  'PI',
-  'RJ',
-  'RN',
-  'RS',
-  'RO',
-  'RR',
-  'SC',
-  'SP',
-  'SE',
-  'TO'
-]
 
 export default function Home() {
-  const { handleSubmit, control } = useForm({
+  const { handleSubmit, control } = useForm<DefaultValues>({
     defaultValues: {
       firstName: '',
       state: ''
-    },
-    mode: 'onChange'
+    }
   })
-  const onSubmit = (data) => console.log(data)
+
+  const onSubmit = (data: DefaultValues) => console.log(data)
 
   return (
     <>
@@ -105,14 +25,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <Center as="form" onSubmit={handleSubmit(onSubmit)}>
-          <Heading>Hello</Heading>
-          <Button type="submit">Click</Button>
-          <InputField control={control} name="firstName" label="Nome" />
-          <SelectField control={control} options={ufBrasil} name="state" label="Estado" />
-        </Center>
-      </main>
+      <main>{/* <FieldArray /> */}</main>
     </>
   )
 }
