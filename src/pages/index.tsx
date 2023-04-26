@@ -1,11 +1,19 @@
 import Head from 'next/head'
 import { useController, useForm, UseControllerProps, FieldValues } from 'react-hook-form'
 import { FieldArray } from './components/FieldArray'
+import { SelectField } from './components/SelectedField'
 
 type DefaultValues = {
   firstName: string
   state: string
 }
+
+const options = [
+  {
+    id: 'dds',
+    option: 1
+  }
+]
 
 export default function Home() {
   const { handleSubmit, control } = useForm<DefaultValues>({
@@ -26,7 +34,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <FieldArray />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <SelectField control={control} name="firstName" options={options} />
+          <button type="submit">Enviar</button>
+        </form>
       </main>
     </>
   )
