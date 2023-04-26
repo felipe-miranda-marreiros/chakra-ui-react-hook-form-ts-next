@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useController, useForm, UseControllerProps, FieldValues } from 'react-hook-form'
-import { Total, FieldArray } from './components/FieldArray'
+import { FieldArray } from './components/FieldArray'
 
 type DefaultValues = {
   firstName: string
@@ -25,7 +25,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>{/* <FieldArray /> */}</main>
+      <main>
+        <FieldArray />
+      </main>
     </>
   )
 }

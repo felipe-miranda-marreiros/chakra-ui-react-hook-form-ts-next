@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useForm, useFieldArray, useWatch, Control } from 'react-hook-form'
+import { InputField } from './InputField'
 
 type FormValues = {
   cart: {
@@ -7,18 +8,6 @@ type FormValues = {
     price: number
     quantity: number
   }[]
-}
-
-export const Total = ({ control }: { control: Control<FormValues> }) => {
-  const formValues = useWatch({
-    name: 'cart',
-    control
-  })
-  const total = formValues.reduce(
-    (acc, current) => acc + (current.price || 0) * (current.quantity || 0),
-    0
-  )
-  return <p>Total Amount: {total}</p>
 }
 
 export const FieldArray = () => {
@@ -29,7 +18,7 @@ export const FieldArray = () => {
     formState: { errors }
   } = useForm<FormValues>({
     defaultValues: {
-      cart: [{ name: 'test', quantity: 1, price: 23 }]
+      cart: [{ name: '', quantity: 0, price: 0 }]
     },
     mode: 'onBlur'
   })
@@ -46,40 +35,29 @@ export const FieldArray = () => {
           return (
             <div key={field.id}>
               <section className={'section'} key={field.id}>
-                <input
-                  placeholder="name"
-                  {...register(`cart.${index}.name` as const, {
-                    required: true
-                  })}
-                  className={errors?.cart?.[index]?.name ? 'error' : ''}
+                <InputField
+                  control={control}
+                  name={`cart.${index}.name` as const}
+                  placeholder="Nome"
+                  isRequired
                 />
-                <input
-                  placeholder="quantity"
-                  type="number"
-                  {...register(`cart.${index}.quantity` as const, {
-                    valueAsNumber: true,
-                    required: true
-                  })}
-                  className={errors?.cart?.[index]?.quantity ? 'error' : ''}
+                <InputField
+                  control={control}
+                  name={`cart.${index}.quantity` as const}
+                  placeholder="Quantidade"
                 />
-                <input
-                  placeholder="value"
-                  type="number"
-                  {...register(`cart.${index}.price` as const, {
-                    valueAsNumber: true,
-                    required: true
-                  })}
-                  className={errors?.cart?.[index]?.price ? 'error' : ''}
+                <InputField
+                  control={control}
+                  name={`cart.${index}.price` as const}
+                  placeholder="Preço"
                 />
                 <button type="button" onClick={() => remove(index)}>
-                  DELETE
+                  Remover
                 </button>
               </section>
             </div>
           )
         })}
-
-        <Total control={control} />
 
         <button
           type="button"
@@ -91,7 +69,7 @@ export const FieldArray = () => {
             })
           }
         >
-          APPEND
+          Adicionar
         </button>
         <input type="submit" />
       </form>

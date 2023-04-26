@@ -13,18 +13,20 @@ interface FieldProps extends InputProps {
   options: Array<string | number>
 }
 
-export const InputField = <T extends FieldValues>(
-  props: UseControllerProps<T> & Partial<FieldProps>
-) => {
+export const InputField = <T extends FieldValues>({
+  label,
+  type,
+  ...rest
+}: UseControllerProps<T> & Partial<FieldProps>) => {
   const {
     field,
     fieldState: { invalid, isTouched, error }
-  } = useController(props)
+  } = useController(rest)
 
   return (
     <FormControl isInvalid={invalid && isTouched}>
-      <FormLabel>{props.label}</FormLabel>
-      <Input {...field} />
+      <FormLabel>{label}</FormLabel>
+      <Input {...rest} {...field} />
       <FormErrorMessage>{error?.message}</FormErrorMessage>
     </FormControl>
   )
